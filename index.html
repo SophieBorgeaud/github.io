@@ -1,747 +1,393 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sophie Borgeaud — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #080c12;
-    --bg2: #0d1420;
-    --bg3: #111a27;
-    --electric: #1e90ff;
-    --electric-dim: rgba(30,144,255,0.12);
-    --text: #e8edf5;
-    --text-muted: #6a7a93;
-    --text-dim: #3a4a60;
-    --border: rgba(30,144,255,0.15);
-    --border-subtle: rgba(255,255,255,0.05);
-    --mono: 'Space Mono', monospace;
-    --sans: 'Inter', sans-serif;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-weight: 300;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(30,144,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(30,144,255,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.2rem 3rem;
-    background: rgba(8,12,18,0.6);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border-subtle);
-    transition: background 0.3s, box-shadow 0.3s, padding 0.3s;
-  }
-
-  nav.scrolled {
-    background: rgba(8,12,18,0.97);
-    box-shadow: 0 4px 32px rgba(0,0,0,0.5);
-    padding: 0.85rem 3rem;
-  }
-
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    color: var(--electric);
-    letter-spacing: 0.05em;
-    text-decoration: none;
-    z-index: 101;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    position: relative;
-    padding-bottom: 2px;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 1px;
-    background: var(--electric);
-    transform: scaleX(0);
-    transition: transform 0.25s;
-  }
-
-  .nav-links a:hover { color: var(--electric); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-  .nav-links a.active { color: var(--electric); }
-  .nav-links a.active::after { transform: scaleX(1); }
-
-  /* HAMBURGER */
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    z-index: 101;
-    background: none;
-    border: none;
-    padding: 4px;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 22px;
-    height: 1.5px;
-    background: var(--text);
-    transition: transform 0.3s, opacity 0.3s, background 0.2s;
-  }
-
-  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); background: var(--electric); }
-  .hamburger.open span:nth-child(2) { opacity: 0; }
-  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); background: var(--electric); }
-
-  /* MOBILE MENU */
-  .mobile-menu {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(8,12,18,0.98);
-    z-index: 99;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 2.5rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-  }
-
-  .mobile-menu.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .mobile-menu a {
-    font-family: var(--mono);
-    font-size: 1.4rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-  }
-
-  .mobile-menu a:hover,
-  .mobile-menu a.active { color: var(--electric); }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 0 3rem;
-    max-width: 900px;
-    margin: 0 auto;
-    z-index: 1;
-  }
-
-  .hero-tag {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--electric);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .hero-tag::before {
-    content: '';
-    display: block;
-    width: 2rem;
-    height: 1px;
-    background: var(--electric);
-  }
-
-  .hero h1 {
-    font-family: var(--mono);
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
-  }
-
-  .hero h1 .name-highlight { color: var(--electric); }
-
-  .hero-subtitle {
-    font-size: clamp(1rem, 2vw, 1.2rem);
-    color: var(--text-muted);
-    font-weight: 300;
-    margin-bottom: 2rem;
-  }
-
-  .hero-description {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-    max-width: 520px;
-    line-height: 1.8;
-    margin-bottom: 3rem;
-    border-left: 2px solid var(--electric);
-    padding-left: 1.25rem;
-  }
-
-  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-  .cursor {
-    display: inline-block;
-    width: 3px;
-    height: 1em;
-    background: var(--electric);
-    margin-left: 4px;
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-  }
-
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  .btn-primary {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--bg);
-    background: var(--electric);
-    border: none;
-    padding: 0.85rem 2rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-
-  .btn-outline {
-    font-family: var(--mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--electric);
-    background: transparent;
-    border: 1px solid var(--electric);
-    padding: 0.85rem 2rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.2s;
-  }
-
-  .btn-outline:hover { background: var(--electric-dim); }
-
-  /* SECTIONS */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 6rem 3rem;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .section-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--electric);
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-    max-width: 120px;
-  }
-
-  .section-title {
-    font-family: var(--mono);
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 700;
-    margin-bottom: 3rem;
-  }
-
-  /* ABOUT */
-  .about-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .about-text p { color: var(--text-muted); margin-bottom: 1rem; font-size: 0.95rem; }
-  .about-text strong { color: var(--text); font-weight: 500; }
-
-  .languages-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-top: 1.5rem;
-  }
-
-  .lang-card {
-    background: var(--bg2);
-    border: 1px solid var(--border-subtle);
-    padding: 1rem;
-    transition: border-color 0.2s;
-  }
-
-  .lang-card:hover { border-color: var(--border); }
-  .lang-name { font-family: var(--mono); font-size: 0.85rem; font-weight: 700; color: var(--text); margin-bottom: 0.2rem; }
-  .lang-level { font-size: 0.72rem; color: var(--electric); font-family: var(--mono); }
-
-  .formation-item {
-    display: flex;
-    gap: 1.5rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .formation-item:last-child { border-bottom: none; }
-  .formation-year { font-family: var(--mono); font-size: 0.7rem; color: var(--electric); min-width: 80px; padding-top: 0.2rem; letter-spacing: 0.1em; }
-  .formation-content h3 { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; }
-  .formation-content p { font-size: 0.82rem; color: var(--text-muted); }
-
-  .stat-item {
-    background: var(--bg2);
-    border: 1px solid var(--border-subtle);
-    padding: 1rem 1.25rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5rem;
-    transition: border-color 0.2s;
-  }
-
-  .stat-item:hover { border-color: var(--border); }
-  .stat-label { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
-  .stat-value { font-family: var(--mono); font-size: 0.82rem; color: var(--electric); }
-
-  /* SKILLS */
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background: var(--border-subtle);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .skill-category { background: var(--bg); padding: 1.5rem; transition: background 0.2s; }
-  .skill-category:hover { background: var(--bg2); }
-  .skill-cat-title { font-family: var(--mono); font-size: 0.68rem; color: var(--electric); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1rem; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-  .skill-tag {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    background: var(--bg3);
-    border: 1px solid var(--border-subtle);
-    padding: 0.3rem 0.6rem;
-    transition: color 0.2s, border-color 0.2s;
-  }
-
-  .skill-tag:hover { color: var(--electric); border-color: var(--border); }
-
-  /* PROJECTS */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1px;
-    background: var(--border-subtle);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .project-card {
-    background: var(--bg);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-    transition: background 0.3s;
-    text-decoration: none;
-    display: block;
-    color: inherit;
-  }
-
-  .project-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--electric);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s;
-  }
-
-  .project-card:hover { background: var(--bg2); }
-  .project-card:hover::before { transform: scaleX(1); }
-
-  .project-number { font-family: var(--mono); font-size: 0.62rem; color: var(--text-dim); letter-spacing: 0.2em; margin-bottom: 1.5rem; }
-  .project-title { font-family: var(--mono); font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; line-height: 1.3; }
-  .project-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem; }
-  .project-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-
-  .project-tag {
-    font-family: var(--mono);
-    font-size: 0.62rem;
-    color: var(--electric);
-    background: var(--electric-dim);
-    border: 1px solid rgba(30,144,255,0.2);
-    padding: 0.25rem 0.5rem;
-  }
-
-  .project-arrow {
-    position: absolute;
-    bottom: 1.5rem; right: 1.5rem;
-    font-family: var(--mono);
-    font-size: 1.1rem;
-    color: var(--text-dim);
-    transition: color 0.3s, transform 0.3s;
-  }
-
-  .project-card:hover .project-arrow { color: var(--electric); transform: translate(3px,-3px); }
-
-  /* CONTACT */
-  .contact-wrapper {
-    background: var(--bg2);
-    border: 1px solid var(--border-subtle);
-    padding: 3rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .contact-wrapper::after {
-    content: '';
-    position: absolute;
-    bottom: -40px; right: -40px;
-    width: 200px; height: 200px;
-    border: 1px solid var(--electric-dim);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-
-  .contact-text { font-size: 0.95rem; color: var(--text-muted); max-width: 480px; margin-bottom: 2rem; line-height: 1.8; }
-  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; }
-
-  .contact-link {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color 0.2s;
-  }
-
-  .contact-link:hover { color: var(--electric); }
-  .contact-link::before { content: '->'; color: var(--electric); }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border-subtle);
-    padding: 2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
-  .footer-text { font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); }
-
-  .divider { width: 100%; height: 1px; background: var(--border-subtle); max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
-
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-
-  /* RESPONSIVE */
-  @media (max-width: 700px) {
-    nav { padding: 1rem 1.5rem; }
-    nav.scrolled { padding: 0.75rem 1.5rem; }
-    .nav-links { display: none; }
-    .hamburger { display: flex; }
-    .mobile-menu { display: flex; }
-    section { padding: 4rem 1.5rem; }
-    .hero { padding: 0 1.5rem; }
-    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-    footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
-    .contact-wrapper { padding: 2rem 1.5rem; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO & Open Graph -->
+    <title>Sophie Borgeaud — Informaticienne de gestion</title>
+    <meta name="description" content="Portfolio de Sophie Borgeaud, étudiante en informatique de gestion à l'ESIG Jura. En recherche de stage 2025–2026.">
+    <meta name="author" content="Sophie Borgeaud">
+    <meta property="og:title" content="Sophie Borgeaud — Informaticienne de gestion">
+    <meta property="og:description" content="Développement web, bases de données, systèmes — en recherche de stage 2025.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sophieborgeaud.ch">
+    <meta name="theme-color" content="#060a14">
+
+    <!-- Favicon inline SVG -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23060a14'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='700' font-size='14' fill='%2338bdf8'>SB</text></svg>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<nav id="navbar">
-  <a href="#hero" class="nav-logo">SB_portfolio</a>
-  <ul class="nav-links">
-    <li><a href="#about" data-section="about">A propos</a></li>
-    <li><a href="#skills" data-section="skills">Competences</a></li>
-    <li><a href="#projects" data-section="projects">Projets</a></li>
-    <li><a href="#contact" data-section="contact">Contact</a></li>
-  </ul>
-  <button class="hamburger" id="hamburger" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
-
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#about" data-section="about">A propos</a>
-  <a href="#skills" data-section="skills">Competences</a>
-  <a href="#projects" data-section="projects">Projets</a>
-  <a href="#contact" data-section="contact">Contact</a>
+<!-- Ambient background -->
+<div class="ambient" aria-hidden="true">
+    <div class="ambient-orb ambient-orb--a"></div>
+    <div class="ambient-orb ambient-orb--b"></div>
+    <div class="grid-overlay"></div>
 </div>
 
-<div class="hero" id="hero">
-  <p class="hero-tag">Informaticienne de gestion ES -- ESIG Jura</p>
-  <h1>Sophie<br><span class="name-highlight">Borgeaud</span><span class="cursor"></span></h1>
-  <p class="hero-subtitle">Etudiante en informatique de gestion - Ancienne enseignante</p>
-  <p class="hero-description">
-    Reconversion vers l'informatique de gestion avec un bagage solide en pedagogie, communication et gestion de projet. Je developpe des competences en developpement web, bases de donnees et administration systeme -- a la recherche d'un stage des 2025.
-  </p>
-  <div class="hero-cta">
-    <a href="#projects" class="btn-primary">Voir mes projets</a>
-    <a href="#contact" class="btn-outline">Me contacter</a>
-  </div>
+<!-- ═══ NAV ═══ -->
+<header class="nav" id="nav">
+    <a href="#hero" class="nav__logo" aria-label="Sophie Borgeaud">SB</a>
+
+    <nav class="nav__links" aria-label="Navigation principale">
+        <a href="#about"    data-section="about">À propos</a>
+        <a href="#skills"   data-section="skills">Compétences</a>
+        <a href="#projects" data-section="projects">Projets</a>
+        <a href="#contact"  data-section="contact">Contact</a>
+    </nav>
+
+    <a href="#contact" class="nav__cta">
+        <span class="nav__cta-dot" aria-hidden="true"></span>
+        Disponible 2025
+    </a>
+
+    <button class="nav__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+</header>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <nav aria-label="Navigation mobile">
+        <a href="#about"    data-section="about">À propos</a>
+        <a href="#skills"   data-section="skills">Compétences</a>
+        <a href="#projects" data-section="projects">Projets</a>
+        <a href="#contact"  data-section="contact">Contact</a>
+    </nav>
 </div>
 
-<div class="divider"></div>
+<main>
 
-<section id="about">
-  <p class="section-label reveal">01 // A propos</p>
-  <h2 class="section-title reveal">Profil</h2>
-  <div class="about-grid">
-    <div class="about-text reveal">
-      <p>Ancienne <strong>enseignante a l'ecole primaire</strong> (Bachelor HEP), je me suis reorientee vers l'informatique de gestion a l'ESIG Jura. Cette transition m'apporte une double competence rare : la rigueur technique et une capacite naturelle a <strong>communiquer et vulgariser</strong> des concepts complexes.</p>
-      <p>Je suis actuellement en premiere annee du cursus <strong>Informaticien-ne de gestion ES</strong>, un programme qui couvre le developpement applicatif, la gestion des systemes, les bases de donnees et le management d'entreprise.</p>
-      <p>Multilingue, analytique et orientee solutions -- je recherche une <strong>place de stage</strong> pour mettre en pratique mes competences dans un environnement professionnel.</p>
-      <div class="languages-grid">
-        <div class="lang-card"><div class="lang-name">Francais</div><div class="lang-level">Langue maternelle</div></div>
-        <div class="lang-card"><div class="lang-name">Anglais</div><div class="lang-level">C1 -- Courant</div></div>
-        <div class="lang-card"><div class="lang-name">Allemand</div><div class="lang-level">B2 -- Maturite bilingue</div></div>
-        <div class="lang-card"><div class="lang-name">Suisse-allemand</div><div class="lang-level">Bon niveau oral</div></div>
-      </div>
-    </div>
-    <div class="reveal">
-      <div class="formation-item">
-        <span class="formation-year">2024 -></span>
-        <div class="formation-content"><h3>Informaticien-ne de gestion ES</h3><p>ESIG Jura -- Plan modulaire PEC2021</p></div>
-      </div>
-      <div class="formation-item">
-        <span class="formation-year">Anterieur</span>
-        <div class="formation-content"><h3>Bachelor Haute Ecole Pedagogique</h3><p>Enseignement primaire</p></div>
-      </div>
-      <div class="formation-item">
-        <span class="formation-year">Anterieur</span>
-        <div class="formation-content"><h3>Maturite gymnasiale</h3><p>Biologie-Chimie - Bilingue FR/DE</p></div>
-      </div>
-      <div class="stat-item"><span class="stat-label">Formation actuelle</span><span class="stat-value">Semestre 2</span></div>
-      <div class="stat-item"><span class="stat-label">Disponibilite stage</span><span class="stat-value">2025 -- 2026</span></div>
-      <div class="stat-item"><span class="stat-label">Localisation</span><span class="stat-value">Jura, CH</span></div>
-    </div>
-  </div>
-</section>
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="hero" aria-label="Introduction">
+        <div class="hero__content">
 
-<div class="divider"></div>
+            <p class="hero__eyebrow">
+                <span class="hero__dot" aria-hidden="true"></span>
+                ESIG Jura · Informaticienne de gestion ES
+            </p>
 
-<section id="skills">
-  <p class="section-label reveal">02 // Competences</p>
-  <h2 class="section-title reveal">Stack technique</h2>
-  <div class="skills-grid reveal">
-    <div class="skill-category">
-      <div class="skill-cat-title">Langages</div>
-      <div class="skill-tags">
-        <span class="skill-tag">HTML</span><span class="skill-tag">CSS</span><span class="skill-tag">JavaScript</span><span class="skill-tag">C#</span><span class="skill-tag">SQL</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-title">Outils dev</div>
-      <div class="skill-tags">
-        <span class="skill-tag">WebStorm</span><span class="skill-tag">GitHub</span><span class="skill-tag">Git</span><span class="skill-tag">VS Code</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-title">Systemes</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Windows Server</span><span class="skill-tag">VMware</span><span class="skill-tag">Active Directory</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-title">Conception</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Astah</span><span class="skill-tag">UML</span><span class="skill-tag">Modelisation BD</span><span class="skill-tag">MCD / MLD</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-title">Soft skills</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Communication</span><span class="skill-tag">Pedagogie</span><span class="skill-tag">Rigueur</span><span class="skill-tag">Gestion de projet</span>
-      </div>
-    </div>
-    <div class="skill-category">
-      <div class="skill-cat-title">En cours</div>
-      <div class="skill-tags">
-        <span class="skill-tag">POO</span><span class="skill-tag">API REST</span><span class="skill-tag">Linux</span><span class="skill-tag">NoSQL</span>
-      </div>
-    </div>
-  </div>
-</section>
+            <h1 class="hero__name">
+          <span class="hero__line" aria-label="Sophie Borgeaud">
+            <span class="hero__word">Sophie</span>
+            <span class="hero__word hero__word--outline">Borgeaud</span>
+          </span>
+            </h1>
 
-<div class="divider"></div>
+            <p class="hero__tagline">
+                <span class="typewriter" id="typewriter" aria-live="polite"></span>
+                <span class="typewriter-cursor" aria-hidden="true"></span>
+            </p>
 
-<section id="projects">
-  <p class="section-label reveal">03 // Projets</p>
-  <h2 class="section-title reveal">Realisations</h2>
-  <div class="projects-grid reveal">
-    <a href="#" class="project-card">
-      <div class="project-number">PROJECT_01</div>
-      <div class="project-title">Titre du projet a completer</div>
-      <div class="project-desc">Description du projet -- ce que tu as realise, l'objectif, le contexte scolaire ou personnel.</div>
-      <div class="project-tags"><span class="project-tag">HTML</span><span class="project-tag">CSS</span><span class="project-tag">JavaScript</span></div>
-      <span class="project-arrow">-></span>
-    </a>
-    <a href="#" class="project-card">
-      <div class="project-number">PROJECT_02</div>
-      <div class="project-title">Titre du projet a completer</div>
-      <div class="project-desc">Description du projet -- base de donnees, modelisation ou application developpee.</div>
-      <div class="project-tags"><span class="project-tag">SQL</span><span class="project-tag">Astah</span><span class="project-tag">UML</span></div>
-      <span class="project-arrow">-></span>
-    </a>
-    <a href="#" class="project-card">
-      <div class="project-number">PROJECT_03</div>
-      <div class="project-title">Titre du projet a completer</div>
-      <div class="project-desc">Description du projet -- administration systeme, configuration serveur ou reseau.</div>
-      <div class="project-tags"><span class="project-tag">Windows Server</span><span class="project-tag">VMware</span><span class="project-tag">C#</span></div>
-      <span class="project-arrow">-></span>
-    </a>
-    <a href="#" class="project-card">
-      <div class="project-number">PROJECT_04</div>
-      <div class="project-title">Titre du projet a completer</div>
-      <div class="project-desc">Description du projet -- developpement d'application, API ou projet interdisciplinaire.</div>
-      <div class="project-tags"><span class="project-tag">C#</span><span class="project-tag">SQL</span><span class="project-tag">GitHub</span></div>
-      <span class="project-arrow">-></span>
-    </a>
-  </div>
-</section>
+            <div class="hero__actions">
+                <a href="#projects" class="btn btn--primary">Voir mes projets</a>
+                <a href="#contact"  class="btn btn--ghost">Me contacter</a>
+            </div>
 
-<div class="divider"></div>
+        </div>
 
-<section id="contact">
-  <p class="section-label reveal">04 // Contact</p>
-  <h2 class="section-title reveal">Travaillons ensemble</h2>
-  <div class="contact-wrapper reveal">
-    <p class="contact-text">Je suis a la recherche d'une place de stage dans le cadre de ma deuxieme annee a l'ESIG. Si mon profil t'interesse -- ou si tu veux simplement echanger -- n'hesite pas a me contacter.</p>
-    <div class="contact-links">
-      <a href="mailto:sophie@sophieborgeaud.ch" class="contact-link">sophie@sophieborgeaud.ch</a>
-      <a href="https://github.com/SophieBorgeaud" class="contact-link" target="_blank">GitHub</a>
-      <a href="https://linkedin.com/in/" class="contact-link" target="_blank">LinkedIn</a>
+        <a href="#about" class="hero__scroll" aria-label="Défiler">
+            <span aria-hidden="true"></span>
+        </a>
+    </section>
+
+    <!-- ═══ ABOUT ═══ -->
+    <section class="section" id="about" aria-labelledby="about-title">
+        <div class="container">
+
+            <div class="section__header reveal">
+                <span class="section__num" aria-hidden="true">01</span>
+                <h2 class="section__title" id="about-title">À propos</h2>
+            </div>
+
+            <div class="about">
+                <div class="about__text reveal">
+                    <p class="about__lead">Double compétence rare&nbsp;: rigueur technique et capacité naturelle à structurer et communiquer des idées complexes.</p>
+                    <p>Actuellement en <strong>Informatique de gestion ES</strong> à l'ESIG Jura, je développe des compétences en développement applicatif, bases de données, systèmes et management. Je recherche une <strong>place de stage dès 2025</strong>.</p>
+                </div>
+
+                <div class="about__aside">
+                    <div class="about__langs reveal">
+                        <p class="about__label">Langues</p>
+                        <ul class="langs">
+                            <li class="lang reveal"><span class="lang__code">FR</span><span class="lang__name">Français</span><span class="lang__lvl">Natif</span></li>
+                            <li class="lang reveal"><span class="lang__code">EN</span><span class="lang__name">Anglais</span><span class="lang__lvl">C1</span></li>
+                            <li class="lang reveal"><span class="lang__code">DE</span><span class="lang__name">Allemand</span><span class="lang__lvl">B2</span></li>
+                            <li class="lang reveal"><span class="lang__code">CH</span><span class="lang__name">Suisse-allemand</span><span class="lang__lvl">Oral</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="about__timeline reveal">
+                        <p class="about__label">Parcours</p>
+                        <ol class="timeline">
+                            <li class="timeline__item">
+                                <span class="timeline__year">2024 →</span>
+                                <div>
+                                    <strong>Informaticienne de gestion ES</strong>
+                                    <span>ESIG Jura</span>
+                                </div>
+                            </li>
+                            <li class="timeline__item">
+                                <span class="timeline__year">Antérieur</span>
+                                <div>
+                                    <strong>Bachelor HEP</strong>
+                                    <span>Enseignement primaire</span>
+                                </div>
+                            </li>
+                            <li class="timeline__item">
+                                <span class="timeline__year">Antérieur</span>
+                                <div>
+                                    <strong>Maturité gymnasiale</strong>
+                                    <span>Biologie-Chimie · Bilingue FR/DE</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══ SKILLS ═══ -->
+    <section class="section section--alt" id="skills" aria-labelledby="skills-title">
+        <div class="container">
+
+            <div class="section__header reveal">
+                <span class="section__num" aria-hidden="true">02</span>
+                <h2 class="section__title" id="skills-title">Compétences</h2>
+            </div>
+
+            <div class="skills reveal">
+                <div class="skill-group">
+                    <h3 class="skill-group__title">Langages</h3>
+                    <div class="pills">
+                        <span class="pill pill--on">HTML</span>
+                        <span class="pill pill--on">CSS</span>
+                        <span class="pill pill--on">JavaScript</span>
+                        <span class="pill">C#</span>
+                        <span class="pill">SQL</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group__title">Outils</h3>
+                    <div class="pills">
+                        <span class="pill pill--on">Git / GitHub</span>
+                        <span class="pill">VS Code</span>
+                        <span class="pill">WebStorm</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group__title">Systèmes</h3>
+                    <div class="pills">
+                        <span class="pill">Windows Server</span>
+                        <span class="pill">VMware</span>
+                        <span class="pill">Active Directory</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group__title">Conception</h3>
+                    <div class="pills">
+                        <span class="pill">UML / Astah</span>
+                        <span class="pill">MCD · MLD</span>
+                        <span class="pill">Modélisation BD</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group__title">En cours</h3>
+                    <div class="pills">
+                        <span class="pill pill--learning">POO</span>
+                        <span class="pill pill--learning">API REST</span>
+                        <span class="pill pill--learning">Linux</span>
+                        <span class="pill pill--learning">NoSQL</span>
+                    </div>
+                </div>
+
+                <div class="skill-group">
+                    <h3 class="skill-group__title">Transversal</h3>
+                    <div class="pills">
+                        <span class="pill pill--soft">Pédagogie</span>
+                        <span class="pill pill--soft">Communication</span>
+                        <span class="pill pill--soft">Rigueur</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══ PROJECTS ═══ -->
+    <section class="section" id="projects" aria-labelledby="projects-title">
+        <div class="container">
+
+            <div class="section__header reveal">
+                <span class="section__num" aria-hidden="true">03</span>
+                <h2 class="section__title" id="projects-title">Projets</h2>
+            </div>
+
+            <!-- Carousel -->
+            <div class="carousel reveal" role="region" aria-label="Projets">
+                <div class="carousel__track" id="carouselTrack">
+
+                    <article class="pcard">
+                        <div class="pcard__head">
+                            <span class="pcard__num">01</span>
+                            <span class="pcard__type">Web</span>
+                        </div>
+                        <h3 class="pcard__title">Titre du projet</h3>
+                        <p class="pcard__desc">Ce que tu as réalisé, l'objectif, le contexte. Une ou deux phrases suffisent.</p>
+                        <div class="pcard__tags">
+                            <span>HTML</span><span>CSS</span><span>JavaScript</span>
+                        </div>
+                        <a href="#" class="pcard__link">Voir le projet <span aria-hidden="true">→</span></a>
+                    </article>
+
+                    <article class="pcard">
+                        <div class="pcard__head">
+                            <span class="pcard__num">02</span>
+                            <span class="pcard__type">Base de données</span>
+                        </div>
+                        <h3 class="pcard__title">Titre du projet</h3>
+                        <p class="pcard__desc">Modélisation, schéma relationnel ou application de gestion. Ce qui t'a appris le plus.</p>
+                        <div class="pcard__tags">
+                            <span>SQL</span><span>UML</span><span>Astah</span>
+                        </div>
+                        <a href="#" class="pcard__link">Voir le projet <span aria-hidden="true">→</span></a>
+                    </article>
+
+                    <article class="pcard">
+                        <div class="pcard__head">
+                            <span class="pcard__num">03</span>
+                            <span class="pcard__type">Système</span>
+                        </div>
+                        <h3 class="pcard__title">Titre du projet</h3>
+                        <p class="pcard__desc">Configuration serveur, réseau ou administration. Le défi technique principal.</p>
+                        <div class="pcard__tags">
+                            <span>Windows Server</span><span>VMware</span><span>C#</span>
+                        </div>
+                        <a href="#" class="pcard__link">Voir le projet <span aria-hidden="true">→</span></a>
+                    </article>
+
+                    <article class="pcard">
+                        <div class="pcard__head">
+                            <span class="pcard__num">04</span>
+                            <span class="pcard__type">Application</span>
+                        </div>
+                        <h3 class="pcard__title">Titre du projet</h3>
+                        <p class="pcard__desc">Application, API ou projet interdisciplinaire. Ce que ça a produit concrètement.</p>
+                        <div class="pcard__tags">
+                            <span>C#</span><span>SQL</span><span>GitHub</span>
+                        </div>
+                        <a href="#" class="pcard__link">Voir le projet <span aria-hidden="true">→</span></a>
+                    </article>
+
+                </div><!-- /.carousel__track -->
+
+                <div class="carousel__controls">
+                    <button class="carousel__btn" id="prevBtn" aria-label="Projet précédent" disabled>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M12 5l-5 5 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="carousel__dots" id="carouselDots" role="tablist" aria-label="Navigation projets"></div>
+                    <button class="carousel__btn" id="nextBtn" aria-label="Projet suivant">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8 5l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══ CONTACT ═══ -->
+    <section class="section section--alt" id="contact" aria-labelledby="contact-title">
+        <div class="container">
+
+            <div class="section__header reveal">
+                <span class="section__num" aria-hidden="true">04</span>
+                <h2 class="section__title" id="contact-title">Contact</h2>
+            </div>
+
+            <div class="contact">
+                <div class="contact__left reveal">
+                    <p class="contact__headline">Discutons<br>de ton projet.</p>
+                    <p class="contact__sub">En recherche d'un stage dès 2025 dans la région Jura / Berne / Bâle ou en télétravail.</p>
+                    <div class="contact__links">
+                        <a href="mailto:sophie.borgeaud@hotmail.com" class="contact__link">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="3" width="14" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.2"/></svg>
+                            sophie.borgeaud@hotmail.com
+                        </a>
+                        <a href="https://www.linkedin.com/in/sophie-borgeaud-a9729317b" target="_blank" rel="noopener" class="contact__link">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 6.5v4M5 4.5v.01M8 10.5V8c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5v2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                            LinkedIn
+                        </a>
+                        <a href="https://github.com/SophieBorgeaud" target="_blank" rel="noopener" class="contact__link">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1a7 7 0 00-2.21 13.64c.35.06.48-.15.48-.34v-1.2c-1.94.42-2.35-.94-2.35-.94-.32-.81-.78-1.02-.78-1.02-.64-.43.05-.42.05-.42.7.05 1.07.72 1.07.72.62 1.07 1.64.76 2.04.58.06-.45.24-.76.44-.93-1.55-.18-3.18-.78-3.18-3.46 0-.76.27-1.39.72-1.87-.07-.18-.31-.89.07-1.85 0 0 .58-.19 1.92.71A6.6 6.6 0 018 4.9c.59 0 1.19.08 1.75.23 1.33-.9 1.91-.71 1.91-.71.38.96.14 1.67.07 1.85.45.48.72 1.1.72 1.87 0 2.69-1.64 3.28-3.2 3.45.25.22.48.65.48 1.31v1.95c0 .19.13.41.49.34A7 7 0 008 1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+                            GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!--
+                  FORMSPREE : Crée un compte sur formspree.io,
+                  puis remplace "YOUR_FORM_ID" par ton identifiant de formulaire.
+                  Exemple : action="https://formspree.io/f/abcdef12"
+                -->
+                <form class="contact__form reveal"
+                      action="https://formspree.io/f/YOUR_FORM_ID"
+                      method="POST"
+                      id="contactForm"
+                      novalidate>
+
+                    <div class="field">
+                        <label class="field__label" for="name">Nom</label>
+                        <input class="field__input" type="text" id="name" name="name" placeholder="Votre nom" required autocomplete="name">
+                    </div>
+
+                    <div class="field">
+                        <label class="field__label" for="email">Email</label>
+                        <input class="field__input" type="email" id="email" name="email" placeholder="votre@email.com" required autocomplete="email">
+                    </div>
+
+                    <div class="field">
+                        <label class="field__label" for="message">Message</label>
+                        <textarea class="field__input field__input--textarea" id="message" name="message" placeholder="Votre message..." rows="4" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn--primary btn--full" id="submitBtn">
+                        <span id="submitLabel">Envoyer le message</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+
+                    <p class="form__status" id="formStatus" aria-live="polite" role="status"></p>
+
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="footer">
+    <div class="container footer__inner">
+        <span class="footer__name">Sophie Borgeaud</span>
+        <span class="footer__copy">© 2025 · Jura, Suisse</span>
+        <a href="mailto:sophie.borgeaud@hotmail.com" class="footer__mail">sophie.borgeaud@hotmail.com</a>
     </div>
-  </div>
-</section>
-
-<footer>
-  <span class="footer-text">2025 Sophie Borgeaud</span>
-  <span class="footer-text">sophieborgeaud.ch</span>
 </footer>
 
-<script>
-  const navbar = document.getElementById('navbar');
-  const hamburger = document.getElementById('hamburger');
-  const mobileMenu = document.getElementById('mobileMenu');
-  const sections = document.querySelectorAll('section[id], div#hero');
-  const navLinks = document.querySelectorAll('[data-section]');
-
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
-    let current = '';
-    sections.forEach(sec => {
-      if (window.scrollY >= sec.offsetTop - 120) current = sec.id;
-    });
-    navLinks.forEach(link => {
-      link.classList.toggle('active', link.dataset.section === current);
-    });
-  });
-
-  hamburger.addEventListener('click', () => {
-    const isOpen = hamburger.classList.toggle('open');
-    mobileMenu.classList.toggle('open', isOpen);
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-
-  mobileMenu.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      hamburger.classList.remove('open');
-      mobileMenu.classList.remove('open');
-      document.body.style.overflow = '';
-    });
-  });
-
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
